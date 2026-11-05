@@ -1,7 +1,7 @@
 # 根号棋（SqrtChess）
 
 根号棋的**规则引擎 + 局面文本（SQFEN）+ 棋谱（.sqg）+ 机器接口**，纯 Python 标准库实现，
-不依赖任何第三方包（Python 3.8+）。
+规则引擎与传统 AI 不依赖第三方包（Python 3.8+）；AlphaZero 训练、网络推理与混合搜索需要 NumPy。
 
 ## 下载与启动
 
@@ -25,6 +25,9 @@ Windows 也可双击 `start_gui.bat`。命令行引擎不需要图形环境。
 | 机器接口 | `sqrtchess/protocol.py` | JSON 行控制协议、AI 应答协议、TCP 服务，见 [docs/PROTOCOL.md](docs/PROTOCOL.md) |
 | 命令行 | `sqrtchess/cli.py` | `python -m sqrtchess` |
 | 内置 AI | `sqrtchess/ai.py` | 随机 / 贪心 / 浅层搜索 / 吃子基线（够用即可，不是本项目的重点） |
+| Alpha-Beta | [sqrtchess/alphabeta.py](sqrtchess/alphabeta.py) | 迭代加深、置换表与攻防交换分析 |
+| AlphaZero | [alphazero/](alphazero/) | NumPy 网络、MCTS、自我对弈、训练及混合搜索 |
+| 已训练模型 | [runs/](runs/) | az1～az6 的权重、迭代快照、训练日志与评估报告 |
 | 规则文档 | [docs/RULES.md](docs/RULES.md) | 规则原文 + 实现口径 + 边界情况 |
 | 示例 | [examples/](examples/) | Node.js 客户端、自定义 AI 示例、示例棋谱 |
 | **图形界面** | [gui/sqrtchess_gui.py](gui/sqrtchess_gui.py) | 对局、观战、悔棋、载入棋谱、写入 FEN 查看局面；可让两路外部 AI 对打 |
@@ -33,7 +36,7 @@ Windows 也可双击 `start_gui.bat`。命令行引擎不需要图形环境。
 | 锦标赛 | [tournament.py](tournament.py) | 多组合、多时限并行对战 |
 | 历史对局 | [examples/matches/](examples/matches/) | 已归档棋谱、锦标赛汇总与输出 |
 | 启动脚本 | [start_gui.bat](start_gui.bat) | Windows 双击启动界面 |
-| 测试 | [tests/test_sqrtchess.py](tests/test_sqrtchess.py) | 79 项单元测试 |
+| 测试 | [tests/test_sqrtchess.py](tests/test_sqrtchess.py) | 引擎、AlphaZero 与 Alpha-Beta 共 138 项测试 |
 
 ## 安装（可选）
 
@@ -45,6 +48,30 @@ sqrtchess fen          :: 安装后会多一个命令行入口
 ~~~
 
 （构建依赖是 setuptools + wheel，正常 pip 会自动安装。）
+
+## AlphaZero：使用已训练模型
+
+安装可选依赖（不会改变纯标准库引擎的依赖）：
+
+```sh
+python -m pip install -e ".[alphazero]"
+python -m alphazero info --model runs/az6/best.json
+python -m alphazero eval --model runs/az6/best.json --fen startpos --search 12
+python gui/sqrtchess_gui.py
+```
+
+在 GUI 的“对局设置”中选择 **AlphaZero 网络**（MCTS）或 **AlphaZero 混合搜索**（神经网络 + Alpha-Beta），
+权重默认填入 `runs/az6/best.json`。`az6` 使用混合搜索训练，对应的历史评估也主要使用混合搜索。
+传统 AI、外部 AI 对战和棋盘缩放仍可使用。
+
+开始新的训练时，将输出写入 `runs/local/`，避免覆盖已发布权重：
+
+```sh
+python -m alphazero train --out runs/local/experiment --iterations 6 --games 36 --sims 60 --workers 10
+```
+
+训练配置与历史实验详见 [AlphaZero](docs/ALPHAZERO.md)、[混合搜索](docs/HYBRID.md)、
+[Alpha-Beta](docs/ALPHABETA.md) 和[模型索引](runs/README.md)。
 
 ## 斗蛐蛐：让两个外部 AI 对打
 
@@ -160,6 +187,7 @@ echo {"request":"move","fen":"startpos"} | python -m sqrtchess ai --level greedy
 
 ~~~bat
 python -m unittest discover -s tests -v
+python -m unittest discover -s ai-gpt -p test_my_work.py -v
 ~~~
 
 perft 基线：深度 1 = 22，2 = 484，3 = 12,342，4 = 314,721。
@@ -169,7 +197,9 @@ perft 基线：深度 1 = 22，2 = 484，3 = 12,342，4 = 314,721。
 - `docs/`、`tests/`、`examples/`：规则与协议、测试、示例及历史对局。
 - 锦标赛仍在项目根目录生成 `duel-*.sqg` 和 `tournament.json`；这些文件、日志及 Python 缓存由 `.gitignore` 排除。
 - `examples/sample_game.sqg` 使用 50 步无吃子上限，回放时请运行 `python -m sqrtchess replay examples/sample_game.sqg --limit 50`。
-- 安装包只包含 `sqrtchess` 引擎；GUI、外部 AI 和对战脚本请从仓库运行。
+- 安装包包含 `sqrtchess` 与 `alphazero`；GUI、外部 AI 和对战脚本请从仓库运行。
+
+本地旧目录的归档与合并对应关系见 [目录整理说明](docs/PROJECT_LAYOUT.md)。
 
 ## 许可证
 

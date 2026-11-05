@@ -17,6 +17,7 @@ __all__ = ["BaseAI", "RandomAI", "GreedyAI", "SearchAI", "CaptureAI", "make_ai",
 
 #: 供界面选择的标准 AI 档位
 AI_LEVELS: Tuple[Tuple[str, str], ...] = (
+    ("ab", "Alpha-Beta 引擎（深度 4）"),
     ("capture", "吃子基线（尽可能多吃子）"),
     ("random", "随机走子"),
     ("greedy", "贪心（吃大子、避免被吃）"),
@@ -224,6 +225,17 @@ def make_ai(spec="greedy", **kwargs) -> Optional[BaseAI]:
     time_limit = kwargs.get("time_limit") or 3.0
     depth = kwargs.get("depth")
     noise = kwargs.get("noise")
+    if text in ("ab", "alphabeta", "alpha-beta", "negamax", "搜索"):
+        from .alphabeta import AlphaBetaAI
+
+        return AlphaBetaAI(depth=depth or 4, seed=seed,
+                           time_limit=kwargs.get("time_limit"),
+                           node_limit=kwargs.get("node_limit"))
+    if text.startswith("ab") and text[2:].isdigit():
+        from .alphabeta import AlphaBetaAI
+
+        return AlphaBetaAI(depth=int(text[2:]), seed=seed,
+                           time_limit=kwargs.get("time_limit"))
     if text in ("capture", "eat", "吃子", "吃子基线"):
         return CaptureAI(depth=depth or 4, seed=seed, noise=noise or 0.0)
     if text in ("random", "rand", "随机"):
@@ -255,7 +267,7 @@ class CaptureAI(BaseAI):
     * 搜索对方能吃回什么、自己再能吃回什么……直到没有吃子为止（可配深度）；
     * 因此在「白吃一个大子」和「吃一个小子但会被吃回」之间能做出正确取舍。
 
-    它是引擎自带的进攻型 AI（只考虑吃子的静态搜索），也可以在图形界面里直接作为对手。
+    它同时是 AlphaZero 训练的基线算法、评估锚点，也可以在界面里直接作为对手。
     """
 
     name = "吃子基线"

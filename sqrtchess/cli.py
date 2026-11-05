@@ -12,6 +12,7 @@
     python -m sqrtchess replay game.sqg         # 回放并校验棋谱
     python -m sqrtchess perft --depth 3         # 走法生成计数
     python -m sqrtchess selfcheck               # 内置自检
+    python -m sqrtchess gui                     # 启动图形界面
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import argparse
 import json
 import os
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 from ._version import ENGINE_NAME, RULE_TAG, __version__
@@ -260,6 +262,23 @@ def cmd_selfcheck(args) -> int:
     return 0
 
 
+def run_gui(extra: Optional[List[str]] = None) -> int:
+    """启动图形界面，extra 为透传给界面的参数（如 --selftest、--limit 30）。"""
+    import runpy
+
+    path = Path(__file__).resolve().parent.parent / "gui" / "sqrtchess_gui.py"
+    if not path.exists():
+        print("未找到图形界面文件: %s" % path, file=sys.stderr)
+        return 2
+    sys.argv = [str(path)] + list(extra or [])
+    runpy.run_path(str(path), run_name="__main__")
+    return 0
+
+
+def cmd_gui(args) -> int:
+    return run_gui(list(getattr(args, "args", None) or []))
+
+
 # --------------------------------------------------------------------------- 解析器
 
 
@@ -336,11 +355,18 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("--seed", type=int, default=20261009, help="随机种子")
     sub.set_defaults(func=cmd_selfcheck)
 
+    sub = subparsers.add_parser("gui", help="启动图形界面", description="启动根号棋图形界面")
+    sub.add_argument("args", nargs="*", help="传给图形界面的参数（如 --selftest）")
+    sub.set_defaults(func=cmd_gui)
     return parser
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     _fix_console()
+    raw = list(sys.argv[1:] if argv is None else argv)
+    # gui 之后的参数（如 --selftest）直接透传给图形界面，不经过 argparse
+    if raw and raw[0] == "gui":
+        return run_gui(raw[1:])
     parser = build_parser()
     args = parser.parse_args(argv)
     if not getattr(args, "command", None):

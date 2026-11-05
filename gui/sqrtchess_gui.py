@@ -46,6 +46,9 @@ FILES = "abcdefghijk"
 
 PLAYER_CHOICES: Tuple[Tuple[str, str], ...] = (
     ("human", "人类"),
+    ("azero", "AlphaZero 网络"),
+    ("hybrid", "AlphaZero 混合搜索"),
+    ("ab", "Alpha-Beta 引擎（3 层）"),
     ("capture", "吃子基线 AI"),
     ("greedy", "贪心 AI"),
     ("random", "随机 AI"),
@@ -179,6 +182,7 @@ class SqrtChessApp:
         # 播放与 AI
         self.white_key = "human"
         self.black_key = "greedy"
+        self.az_players = {}
         self.auto_play = False
         self.delay_ms = 400
         self.thinking = False
@@ -505,6 +509,16 @@ class SqrtChessApp:
         limit_box.bind("<<ComboboxSelected>>", lambda event: self.apply_limit())
         ttk.Button(setup_tab, text="立即 AI 走子", command=lambda: self.request_ai_move(force=True)).grid(
             row=9, column=0, columnspan=2, sticky="w", pady=(10, 0))
+        ttk.Label(setup_tab, text="AlphaZero 权重文件（.json，训练产物 runs/.../best.json）",
+                  wraplength=420).grid(row=11, column=0, columnspan=3, sticky="w", pady=(8, 0))
+        self.var_model = tk.StringVar(value=default_model_path())
+        ttk.Entry(setup_tab, textvariable=self.var_model, font=self.font_mono,
+                  width=40).grid(row=12, column=0, columnspan=2, sticky="ew", pady=2)
+        ttk.Button(setup_tab, text="浏览…", command=self.browse_model).grid(row=12, column=2, padx=2)
+        ttk.Label(setup_tab, text="MCTS 每步模拟次数").grid(row=13, column=0, sticky="w", pady=(6, 0))
+        self.var_az_sims = tk.StringVar(value="120")
+        ttk.Entry(setup_tab, textvariable=self.var_az_sims, width=8).grid(row=13, column=1,
+                                                                         sticky="w", padx=4)
         ttk.Label(setup_tab, text="提示：把白/黑都设为「外部程序」再点“斗蛐蛐”，即可让两个 AI 对打。",
                   wraplength=330).grid(row=10, column=0, columnspan=3, sticky="w", pady=(8, 0))
         setup_tab.columnconfigure(0, weight=1)
@@ -931,6 +945,13 @@ class SqrtChessApp:
         self.new_game(self.start_fen)
         self.log("无吃子步数上限设为：%s" % ("不限" if self.limit is None else self.limit))
 
+    def browse_model(self) -> None:
+        path = filedialog.askopenfilename(title="选择 AlphaZero 权重文件",
+                                          filetypes=[("AlphaZero 网络", "*.json"),
+                                                     ("所有文件", "*.*")])
+        if path:
+            self.var_model.set(path)
+
     def browse_external(self, side: str = "white") -> None:
         path = filedialog.askopenfilename(
             title="选择外部 AI 程序（%s）" % ("白方" if side == "white" else "黑方"),
@@ -985,14 +1006,21 @@ class SqrtChessApp:
         # 所有 tkinter 读取都在主线程完成，工作线程只拿纯数据
         command = self.external_command_for(self.game.side)
         think_ms = self.external_time_ms()
+        model_path = self.var_model.get().strip()
+        try:
+            az_sims = max(1, int(self.var_az_sims.get()))
+        except ValueError:
+            az_sims = 120
 
         def worker() -> None:
             try:
                 if level == "external":
                     result = self.ask_external_ai(command, fen, think_ms)
+                elif level in ("azero", "hybrid"):
+                    result = self.ask_alphazero(model_path, az_sims, fen, level)
                 else:
                     game = Game.from_fen(fen, no_capture_limit=self.limit)
-                    engine = make_ai(level, depth=4 if level == "capture" else None)
+                    engine = make_ai(level, depth=4 if level == "capture" else 3 if level == "ab" else None)
                     move = engine.choose(game)
                     result = game.move_dict(move)["notation"] if move else ""
                 self.ai_queue.put(("move", result))
@@ -1000,6 +1028,31 @@ class SqrtChessApp:
                 self.ai_queue.put(("error", "%s: %s" % (type(exc).__name__, exc)))
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def ask_alphazero(self, model_path: str, sims: int, fen: str, mode: str = "azero") -> str:
+        """用训练好的 AlphaZero 网络走一步。
+
+        注意：本方法在工作线程里执行，所以参数都由主线程读好后传进来，
+        这里绝不能访问任何 tkinter 控件（tkinter 不是线程安全的）。
+        """
+        if not model_path:
+            raise RuntimeError("还没有选择 AlphaZero 权重文件（可在“对局设置”里指定 best.json）")
+        cache_key = (model_path, sims, mode, Path(model_path).stat().st_mtime_ns)
+        player = self.az_players.get(cache_key)
+        if player is None:
+            try:
+                from alphazero.players import load_player
+            except ImportError as exc:
+                raise RuntimeError("加载 AlphaZero 需要 numpy：%s" % exc)
+            player = load_player(model_path, sims=sims, seed=1,
+                                 search_kind="hybrid" if mode == "hybrid" else "mcts",
+                                 ab_depth=2, time_limit=0.3)
+            self.az_players[cache_key] = player
+        game = Game.from_fen(fen, no_capture_limit=self.limit)
+        move = player.choose(game)
+        if move is None:
+            return ""
+        return game.move_dict(move)["notation"]
 
     def ask_external_ai(self, command: str, fen: str, time_ms: int = 300) -> str:
         if not command:
@@ -1306,6 +1359,20 @@ class SqrtChessApp:
         self.root.destroy()
 
 
+def default_model_path() -> str:
+    """如果本地已经有训练产物，就默认填上最新的 best.json。"""
+    preferred = ROOT_DIR / "runs" / "az6" / "best.json"
+    if preferred.exists():
+        return str(preferred)
+    runs = ROOT_DIR / "runs"
+    if runs.is_dir():
+        candidates = sorted(runs.glob("*/best.json"), key=lambda item: item.stat().st_mtime,
+                            reverse=True)
+        if candidates:
+            return str(candidates[0])
+    return ""
+
+
 def default_external_command(folder: str) -> str:
     """优先使用随包携带的对手（ai-deepseek / ai-gpt / ai-claude），否则退回内置 AI 协议。"""
     for name in ("my_work.py", "strong_ai.py", "main.py"):
@@ -1440,6 +1507,23 @@ def run_selftest(app: "SqrtChessApp") -> int:
         time.sleep(0.02)
     check("吃子基线 AI 走子", app.game.ply >= 1, "ply=%d" % app.game.ply)
 
+    # AlphaZero 网络（如果本地已有训练产物）
+    model = default_model_path()
+    if model:
+        app.var_model.set(model)
+        app.var_az_sims.set("12")
+        app.new_game()
+        app.white_key = "azero"
+        app.black_key = "human"
+        app.request_ai_move(force=True)
+        for _ in range(600):
+            app.root.update()
+            if app.game.ply >= 1:
+                break
+            time.sleep(0.02)
+        check("AlphaZero 网络走子", app.game.ply >= 1, "ply=%d" % app.game.ply)
+    else:
+        check("AlphaZero 网络走子", True, "跳过（还没有训练产物）")
     app.white_key = "human"
     app.black_key = "human"
 

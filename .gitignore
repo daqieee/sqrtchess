@@ -229,3 +229,10 @@ __marimo__/
 .agents/
 .idea/
 .vscode/
+
+# Local originals and new experiments
+.local/
+/runs/local/
+# Preserve historical training logs alongside published models
+!/runs/**/*.log
+!/runs/*.log

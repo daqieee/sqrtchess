@@ -1,0 +1,11 @@
+{
+  "sqrtchess\\ai.py": "bd88203def379eeb17e86a98bf508118676adcf2c1e04baf98f67e2c09020125",
+  "sqrtchess\\cli.py": "e47478ee67915adc2e15a861b12e64f95ac2da543742790b7c5ea2bcd422b4ac",
+  "sqrtchess\\core.py": "1b8a0c45fe9f83736aa348f5ddf90620ce85fc0d8c361dd542efdb6756e3d7cc",
+  "sqrtchess\\fen.py": "721d424fa0d0153275d51d29458a591a36d164c623d4f5fa76c3408852cddc0d",
+  "sqrtchess\\protocol.py": "dc3879d93a89add140cf09380888fd1d4f2bd7c6ab93e3d6335628aef9edd4b1",
+  "sqrtchess\\record.py": "78502623bfa973715f9418295d1638f2455a50236a9747d75d54501ab4904f90",
+  "sqrtchess\\_version.py": "65f30b74f36b4e136391a2bd742e2f3d76bd467679c8f74864560deec97756f0",
+  "sqrtchess\\__init__.py": "1c8d8289bf7813d75a4dc815d317de4c2336c26193e19ebf5507e2ba5624fa90",
+  "sqrtchess\\__main__.py": "dcbc63fe1245b98ac24a0ba1cd803ad91e5c633f7a194231d192f789c4af265d"
+}

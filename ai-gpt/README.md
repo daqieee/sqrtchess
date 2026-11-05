@@ -124,9 +124,11 @@ GUI 请求只含 FEN，无法传递自定义无吃子上限。如果 GUI 改为 
 
 ```powershell
 python -B -m unittest discover -s tests -v
+python -B -m unittest discover -s ai-gpt -p test_my_work.py -v
+python -B ai-gpt/benchmark.py --time-ms 100 --pairs 2 --output benchmark_new.json
 ```
 
-> 以下为 AI 原开发阶段的历史验证记录；独立 AI 测试、benchmark 脚本及结果 JSON 未包含在本仓库中。当前可使用根目录 `duel.py` 与 `tournament.py` 重新对战。
+> 以下为 AI 原开发阶段的历史验证记录。独立测试、benchmark 脚本及结果 JSON 现已归入本目录；结果和 `engine_hashes.json` 记录的是当时的源码版本，不代表当前合并版本的校验值。
 
 历史测试覆盖：随机合法对局、任意摆放局面、大棋子、双方终局判定、吃子变卡死、
 无吃子上限、走子撤销、输入局面不被修改、极短预算、连续协议与错误恢复、战术逃子与毒子。

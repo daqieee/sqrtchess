@@ -1,0 +1,319 @@
+{
+  "iterations": 6,
+  "best": "runs\\az1\\best.json",
+  "buffer": 20000,
+  "seconds": 717.0,
+  "history": [
+    {
+      "iteration": 1,
+      "lr": 0.002,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 13422,
+        "avg_plies": 372.8,
+        "seconds": 412.6
+      },
+      "train": {
+        "loss": 3.45451,
+        "policy_loss": 3.20477,
+        "value_loss": 0.24974,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 17.50052
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 10,
+        "wins_b": 0,
+        "draws": 0,
+        "score_a": 1.0,
+        "material_a": 11.0,
+        "avg_plies": 240.0,
+        "seconds": 44.31,
+        "reasons": {
+          "truncated-adjudicated": 10
+        },
+        "errors": 0
+      },
+      "promoted": true,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 0,
+        "wins_b": 4,
+        "draws": 4,
+        "score_a": 0.25,
+        "material_a": -27.25,
+        "avg_plies": 205.0,
+        "seconds": 19.88,
+        "reasons": {
+          "no-capture-limit": 2,
+          "truncated-adjudicated": 6
+        },
+        "errors": 0
+      },
+      "buffer": 19592,
+      "round_seconds": 127.5,
+      "total_seconds": 151.8
+    },
+    {
+      "iteration": 2,
+      "lr": 0.0018,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 13487,
+        "avg_plies": 374.6,
+        "seconds": 456.5
+      },
+      "train": {
+        "loss": 2.97514,
+        "policy_loss": 2.66362,
+        "value_loss": 0.31152,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 18.17308
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 5,
+        "wins_b": 0,
+        "draws": 5,
+        "score_a": 0.75,
+        "material_a": 5.0,
+        "avg_plies": 209.0,
+        "seconds": 42.24,
+        "reasons": {
+          "no-capture-limit": 10
+        },
+        "errors": 0
+      },
+      "promoted": true,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 0,
+        "wins_b": 4,
+        "draws": 4,
+        "score_a": 0.25,
+        "material_a": -24.0,
+        "avg_plies": 206.8,
+        "seconds": 18.58,
+        "reasons": {
+          "no-capture-limit": 3,
+          "truncated-adjudicated": 5
+        },
+        "errors": 0
+      },
+      "buffer": 20000,
+      "round_seconds": 129.7,
+      "total_seconds": 281.5
+    },
+    {
+      "iteration": 3,
+      "lr": 0.00162,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 12784,
+        "avg_plies": 355.1,
+        "seconds": 397.7
+      },
+      "train": {
+        "loss": 2.37226,
+        "policy_loss": 2.14555,
+        "value_loss": 0.22671,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 17.18237
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 5,
+        "wins_b": 5,
+        "draws": 0,
+        "score_a": 0.5,
+        "material_a": 17.0,
+        "avg_plies": 173.0,
+        "seconds": 30.9,
+        "reasons": {
+          "no-capture-limit": 10
+        },
+        "errors": 0
+      },
+      "promoted": false,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 2,
+        "wins_b": 4,
+        "draws": 2,
+        "score_a": 0.375,
+        "material_a": -12.25,
+        "avg_plies": 240.0,
+        "seconds": 20.45,
+        "reasons": {
+          "truncated-adjudicated": 8
+        },
+        "errors": 0
+      },
+      "buffer": 20000,
+      "round_seconds": 113.1,
+      "total_seconds": 394.6
+    },
+    {
+      "iteration": 4,
+      "lr": 0.001458,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 11429,
+        "avg_plies": 317.5,
+        "seconds": 353.4
+      },
+      "train": {
+        "loss": 2.13733,
+        "policy_loss": 1.92708,
+        "value_loss": 0.21025,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 17.24251
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 5,
+        "wins_b": 5,
+        "draws": 0,
+        "score_a": 0.5,
+        "material_a": 1.0,
+        "avg_plies": 180.0,
+        "seconds": 34.79,
+        "reasons": {
+          "no-capture-limit": 10
+        },
+        "errors": 0
+      },
+      "promoted": false,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 0,
+        "wins_b": 3,
+        "draws": 5,
+        "score_a": 0.3125,
+        "material_a": -31.25,
+        "avg_plies": 182.2,
+        "seconds": 15.72,
+        "reasons": {
+          "no-capture-limit": 5,
+          "truncated-adjudicated": 3
+        },
+        "errors": 0
+      },
+      "buffer": 20000,
+      "round_seconds": 107.8,
+      "total_seconds": 502.4
+    },
+    {
+      "iteration": 5,
+      "lr": 0.001312,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 10489,
+        "avg_plies": 291.4,
+        "seconds": 332.2
+      },
+      "train": {
+        "loss": 2.16419,
+        "policy_loss": 1.94912,
+        "value_loss": 0.21507,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 17.49811
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 5,
+        "wins_b": 5,
+        "draws": 0,
+        "score_a": 0.5,
+        "material_a": -8.0,
+        "avg_plies": 214.5,
+        "seconds": 39.88,
+        "reasons": {
+          "no-capture-limit": 10
+        },
+        "errors": 0
+      },
+      "promoted": false,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 0,
+        "wins_b": 5,
+        "draws": 3,
+        "score_a": 0.1875,
+        "material_a": -26.5,
+        "avg_plies": 187.5,
+        "seconds": 16.16,
+        "reasons": {
+          "truncated-adjudicated": 5,
+          "no-capture-limit": 3
+        },
+        "errors": 0
+      },
+      "buffer": 20000,
+      "round_seconds": 112.6,
+      "total_seconds": 615.0
+    },
+    {
+      "iteration": 6,
+      "lr": 0.001181,
+      "selfplay": {
+        "games": 36,
+        "samples_added": 10912,
+        "avg_plies": 303.1,
+        "seconds": 349.9
+      },
+      "train": {
+        "loss": 2.10243,
+        "policy_loss": 1.88142,
+        "value_loss": 0.22101,
+        "steps": 600,
+        "epochs": 1,
+        "samples_seen": 19200,
+        "seconds": 17.52165
+      },
+      "gate": {
+        "games": 10,
+        "wins_a": 5,
+        "wins_b": 0,
+        "draws": 5,
+        "score_a": 0.75,
+        "material_a": 8.0,
+        "avg_plies": 148.0,
+        "seconds": 28.14,
+        "reasons": {
+          "no-capture-limit": 10
+        },
+        "errors": 0
+      },
+      "promoted": true,
+      "anchor_baseline": {
+        "games": 8,
+        "wins_a": 0,
+        "wins_b": 4,
+        "draws": 4,
+        "score_a": 0.25,
+        "material_a": -32.5,
+        "avg_plies": 176.1,
+        "seconds": 15.35,
+        "reasons": {
+          "no-capture-limit": 5,
+          "truncated-adjudicated": 3
+        },
+        "errors": 0
+      },
+      "buffer": 20000,
+      "round_seconds": 101.9,
+      "total_seconds": 716.8
+    }
+  ]
+}

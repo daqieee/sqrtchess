@@ -15,8 +15,11 @@ classifiers = [
     "Topic :: Games/Entertainment :: Board Games",
 ]
 
+[project.optional-dependencies]
+alphazero = ["numpy>=1.24"]
+
 [project.scripts]
 sqrtchess = "sqrtchess.cli:main"
 
 [tool.setuptools]
-packages = ["sqrtchess"]
+packages = ["sqrtchess", "alphazero"]
