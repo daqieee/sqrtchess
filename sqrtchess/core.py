@@ -802,5 +802,3 @@ def perft_divide(game: Game, depth: int) -> Dict[str, int]:
         result[move.text()] = perft(game, depth - 1)
         game.pop()
     return result
-
-
