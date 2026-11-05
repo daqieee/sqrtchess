@@ -1,7 +1,8 @@
 # 根号棋（SqrtChess）
 
-根号棋的**规则引擎 + 局面文本（SQFEN）+ 棋谱（.sqg）+ 机器接口**，纯 Python 标准库实现，
-规则引擎与传统 AI 不依赖第三方包（Python 3.8+）；AlphaZero 训练、网络推理与混合搜索需要 NumPy。
+## 这是什么
+根号棋 SqrtChess：一款数论棋类游戏的引擎。棋子走子距离恰为`√(大小)`，吃子后大小相加；不能表示为两个平方数之和的棋子会“卡死”，完整规则见 [docs/RULES.md](docs/RULES.md)。
+本仓库包含**规则引擎 + 图形界面 + 局面文本（SQFEN）+ 棋谱（.sqg）+ 机器接口 + AlphaZero 训练与已训练模型**。规则引擎与传统 AI 使用 Python 3.8+ 标准库；AlphaZero 训练、网络推理与混合搜索需要 NumPy。
 
 ## 下载与启动
 
