@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# SqrtChess local outputs and machine-specific files
+/*.sqg
+/tournament.json
+*.log
+.env.*
+!.env.example
+.codex/
+.agents/
+.idea/
+.vscode/

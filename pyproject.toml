@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqrtchess"
+version = "1.0.0"
+description = "根号棋（Square Root Chess）规则引擎、局面文本（SQFEN）、棋谱与机器接口"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["board-game", "chess-variant", "sqrt-chess", "game-engine"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment :: Board Games",
+]
+
+[project.scripts]
+sqrtchess = "sqrtchess.cli:main"
+
+[tool.setuptools]
+packages = ["sqrtchess"]

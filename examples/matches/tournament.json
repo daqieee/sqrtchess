@@ -1,0 +1,43 @@
+{
+  "games_per_config": 6,
+  "total_games": 24,
+  "seconds": 2805.2,
+  "configs": [
+    {
+      "name": "claude-vs-deepseek-1000ms",
+      "label": "Claude vs DeepSeek @1000ms",
+      "time_ms": 1000,
+      "white": "Claude",
+      "black": "DeepSeek",
+      "seconds": 1176.4,
+      "returncode": 0
+    },
+    {
+      "name": "claude-vs-deepseek-2000ms",
+      "label": "Claude vs DeepSeek @2000ms",
+      "time_ms": 2000,
+      "white": "Claude",
+      "black": "DeepSeek",
+      "seconds": 2723.2,
+      "returncode": 0
+    },
+    {
+      "name": "claude-vs-gpt-1000ms",
+      "label": "Claude vs GPT @1000ms",
+      "time_ms": 1000,
+      "white": "Claude",
+      "black": "GPT",
+      "seconds": 1418.8,
+      "returncode": 0
+    },
+    {
+      "name": "claude-vs-gpt-2000ms",
+      "label": "Claude vs GPT @2000ms",
+      "time_ms": 2000,
+      "white": "Claude",
+      "black": "GPT",
+      "seconds": 2805.2,
+      "returncode": 0
+    }
+  ]
+}
